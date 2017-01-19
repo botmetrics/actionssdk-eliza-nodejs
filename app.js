@@ -22,6 +22,10 @@ const Eliza = require('elizabot');
 const express = require('express');
 const bodyParser = require('body-parser');
 
+// Make sure you set BOTMETRICS_API_KEY and BOTMETRICS_BOT_ID in your environment
+const Botmetrics = require('botmetrics');
+let _request = {};
+
 const app = express();
 app.set('port', (process.env.PORT || 8080));
 app.use(bodyParser.json({type: 'application/json'}));
@@ -33,6 +37,9 @@ app.use(bodyParser.json({type: 'application/json'}));
 const mainIntentHandler = (assistant) => {
   console.log('Main intent triggered.');
   const eliza = new Eliza();
+
+  _request.bot_response = eliza.getInitial();
+  Botmetrics.track(_request);
   assistant.ask(eliza.getInitial(), {elizaInstance: eliza});
 };
 
@@ -57,8 +64,12 @@ const rawIntentHandler = (assistant) => {
 
   const elizaReply = eliza.transform(assistant.getRawInput());
   if (eliza.quit) {
+    _request.bot_response = eliza.getFinal();
+    Botmetrics.track(_request);
     assistant.tell(eliza.getFinal());
   } else {
+    _request.bot_response = elizaReply;
+    Botmetrics.track(_request);
     assistant.ask(elizaReply, {elizaInstance: eliza});
   }
 };
@@ -82,6 +93,7 @@ actionMap.set(new ActionsSdkAssistant().StandardIntents.TEXT, rawIntentHandler);
 app.post('/', (request, response) => {
   console.log('Incoming post request...');
   const assistant = new ActionsSdkAssistant({request: request, response: response});
+  _request = request.body;
   assistant.handleRequest(actionMap);
 });
 
