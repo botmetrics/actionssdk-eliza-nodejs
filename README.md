@@ -18,6 +18,10 @@ See the developer guide and release notes at [https://developers.google.com/acti
 
 For more detailed information on deployment, see the [documentation](https://developers.google.com/actions/samples/).
 
+## Tracking Your Bot's Conversations
+
+Set up a Google Home bot on [Botmetrics](https://www.getbotmetrics.com) and get the API Key and Bot ID for the bot. Set the environment variables `BOTMETRICS_API_KEY` and `BOTMETRICS_BOT_ID` with these values. Add `botmetrics` to your `package.json` and add the `Botmetrics.track` API calls to your code as shown [here](https://github.com/botmetrics/actionssdk-eliza-nodejs/commit/c205f261bb0afc475cc56f74d2e7cbd8eb8b9c08).
+
 ## References and How to report bugs
 * Actions on Google documentation: [https://developers.google.com/actions/](https://developers.google.com/actions/).
 * If you find any issues, please open a bug here on GitHub.
@@ -25,6 +29,7 @@ For more detailed information on deployment, see the [documentation](https://dev
 
 ## How to make contributions?
 Please read and follow the steps in the CONTRIBUTING.md.
+
 
 ## License
 See LICENSE.md.
